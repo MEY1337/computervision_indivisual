@@ -1,0 +1,33 @@
+import cv2 as cv
+
+import sys
+
+img = cv.imread('ch2/girl_laughing.jpg')
+
+if img is None:
+    sys.exit("Could not read the image.")
+
+
+# 마우스 클릭 시 실행되는 함수
+def draw(event, x, y, flags, param):
+
+    # 왼쪽 버튼 클릭 시 직사각형 그리기
+    if event == cv.EVENT_LBUTTONDOWN:
+        cv.rectangle(img, (x, y), (x+100, y+100), (0, 0, 255), 2)
+
+    # 오른쪽 버튼 클릭 시 원 그리기
+    elif event == cv.EVENT_RBUTTONDOWN:
+        cv.circle(img, (x, y), 50, (255, 0, 0), 2)
+
+    # 변경된 이미지 출력
+    cv.imshow('Display window', img)
+
+
+cv.imshow('Display window', img)
+
+# 마우스 이벤트와 함수 연결
+cv.setMouseCallback('Display window', draw)
+
+cv.waitKey()
+
+cv.destroyAllWindows()

@@ -1,0 +1,44 @@
+import cv2 as cv
+
+# 이미지 불러오기 (본인 컴퓨터 경로로 수정)
+img = cv.imread('ch3/rose.png')
+
+if img is None:
+    raise FileNotFoundError("rose.png 파일을 찾을 수 없습니다.")
+
+# 마우스로 원하는 영역 선택
+x, y, w, h = cv.selectROI('Select ROI', img, False)
+
+cv.destroyWindow('Select ROI')
+
+# 선택한 영역이 없는 경우 종료
+if w == 0 or h == 0:
+    print("영역을 선택하지 않았습니다.")
+
+else:
+    # 마우스로 선택한 영역 잘라내기
+    patch = img[y:y+h, x:x+w, :]
+
+    # 선택한 영역에 사각형 표시
+    img = cv.rectangle(img, (x,y), (x+w,y+h), (255,0,0), 3)
+
+    # 최근접 이웃 보간
+    patch1 = cv.resize(patch, dsize=(0,0), fx=5, fy=5,
+                       interpolation=cv.INTER_NEAREST)
+
+    # 양선형 보간
+    patch2 = cv.resize(patch, dsize=(0,0), fx=5, fy=5,
+                       interpolation=cv.INTER_LINEAR)
+
+    # 양3차 보간
+    patch3 = cv.resize(patch, dsize=(0,0), fx=5, fy=5,
+                       interpolation=cv.INTER_CUBIC)
+
+    # 결과 출력
+    cv.imshow('Original', img)
+    cv.imshow('Resize nearest', patch1)
+    cv.imshow('Resize bilinear', patch2)
+    cv.imshow('Resize bicubic', patch3)
+
+    cv.waitKey()
+    cv.destroyAllWindows()
